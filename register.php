@@ -4,32 +4,28 @@ include 'config.php';
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
+    if ($username == '' || $email == '' || $password == '' || $confirm_password == '') {
         $error = 'Please fill in all fields';
-    } elseif (strlen($password) < 6) {
+    } else if (strlen($password) < 6) {
         $error = 'Password must be at least 6 characters';
-    } elseif ($password !== $confirm_password) {
+    } else if ($password != $confirm_password) {
         $error = 'Passwords do not match';
     } else {
-        try {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $stmt->execute([$username, $email, $hashedPassword]);
-            $success = 'Registration successful! <a href="login.php">Login here</a>';
-        } catch (PDOException $e) {
-            if (strpos($e->getMessage(), 'username') !== false) {
-                $error = 'Username already exists';
-            } elseif (strpos($e->getMessage(), 'email') !== false) {
-                $error = 'Email already exists';
-            } else {
-                $error = 'Registration failed: ' . $e->getMessage();
-            }
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $result = $stmt->execute(array($username, $email, $hashed_password));
+        
+        if ($result) {
+            $success = 'Registration successful! <a href=\"login.php\">Login here</a>';
+        } else {
+            $error = 'Registration failed. Username or email may already exist.';
         }
     }
 }

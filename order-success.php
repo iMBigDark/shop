@@ -2,11 +2,14 @@
 include 'config.php';
 requireLogin();
 
-$orderId = $_GET['order_id'] ?? '';
+$order_id = $_GET['order_id'];
+$order = null;
 
-if ($orderId) {
-    $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?");
-    $stmt->execute([$orderId, $_SESSION['user_id']]);
+if ($order_id) {
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT id, user_id, total_price, status, created_at FROM orders WHERE id = ? AND user_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array($order_id, $user_id));
     $order = $stmt->fetch();
 }
 ?>
@@ -35,7 +38,13 @@ if ($orderId) {
             <?php if ($order): ?>
                 <p>شماره سفارش: <strong>#<?php echo $order['id']; ?></strong></p>
                 <p>مبلغ کل: <strong><?php echo number_format($order['total_price'], 0); ?> ریال</strong></p>
-                <p>وضعیت: <strong><?php echo $order['status'] === 'completed' ? 'تکمیل شد' : 'در انتظار'; ?></strong></p>
+                <p>وضعیت: <strong><?php 
+                    if ($order['status'] == 'completed') {
+                        echo 'تکمیل شد';
+                    } else {
+                        echo 'در انتظار';
+                    }
+                ?></strong></p>
                 <p>تاریخ سفارش: <strong><?php echo date('Y-m-d', strtotime($order['created_at'])); ?></strong></p>
             <?php endif; ?>
             <p>از خرید شما سپاسگزاریم!</p>

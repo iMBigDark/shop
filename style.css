@@ -704,109 +704,26 @@ table td .btn {
 @media (max-width: 768px) {
     .navbar-container {
         flex-direction: column;
-        gap: 12px;
-    }
-
-    .navbar-right {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 16px;
-    }
-
-    .admin-tabs {
-        flex-wrap: wrap;
-    }
-
-    .tab-btn {
-        padding: 10px 16px;
-        font-size: 14px;
-    }
-
-    table {
-        font-size: 13px;
-    }
-
-    table th,
-    table td {
-        padding: 10px 12px;
-    }
-
-    .modal-content {
-        width: 95%;
-        margin: 25% auto;
-        padding: 20px;
-    }
-
-    .success-box {
-        padding: 30px 20px;
-    }
-
-    .auth-box {
-        padding: 30px 20px;
-    }
-
-    .container {
-        padding: 20px;
-    }
-
-    .cart-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .cart-item-price {
-        align-self: flex-end;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar-title {
-        font-size: 20px;
     }
 
     .products-grid {
         grid-template-columns: 1fr;
     }
 
-    .product-card h3 {
-        font-size: 15px;
-    }
-
-    .product-price {
-        font-size: 18px;
+    .container {
+        padding: 20px;
     }
 
     .auth-box {
-        padding: 24px 16px;
-    }
-
-    .auth-box h1 {
-        font-size: 24px;
-    }
-
-    .cart-summary .btn {
-        padding: 14px;
+        padding: 20px;
     }
 
     .success-box {
         padding: 20px;
     }
 
-    .success-box h1 {
-        font-size: 24px;
-    }
-
-    .admin-tabs {
-        gap: 4px;
-    }
-
-    .tab-btn {
-        padding: 10px 12px;
-        font-size: 13px;
+    .modal-content {
+        width: 95%;
+        padding: 20px;
     }
 }

@@ -1,45 +1,38 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$dbname = 'simple_shop';
-$username = 'root';
-$password = '';
+$db_host = 'localhost';
+$db_name = 'simple_shop';
+$db_user = 'root';
+$db_pass = '';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+$pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
 
 function isLoggedIn() {
-    return isset($_SESSION['user_id']);
+    if (isset($_SESSION['user_id'])) {
+        return true;
+    }
+    return false;
 }
 
 function isAdmin() {
-    return isLoggedIn() && $_SESSION['role'] === 'admin';
+    if (isLoggedIn() && $_SESSION['role'] == 'admin') {
+        return true;
+    }
+    return false;
 }
 
 function requireLogin() {
     if (!isLoggedIn()) {
         header("Location: login.php");
-        exit;
+        exit();
     }
 }
 
 function requireAdmin() {
     if (!isAdmin()) {
         header("Location: login.php");
-        exit;
+        exit();
     }
-}
-
-function hashPassword($password) {
-    return password_hash($password, PASSWORD_DEFAULT);
-}
-
-function verifyPassword($password, $hash) {
-    return password_verify($password, $hash);
 }
 ?>

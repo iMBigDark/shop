@@ -2,7 +2,10 @@
 include 'config.php';
 requireLogin();
 
-$products = $pdo->query("SELECT * FROM products WHERE stock > 0")->fetchAll();
+$sql = "SELECT * FROM products WHERE stock > 0";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$products = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fa">

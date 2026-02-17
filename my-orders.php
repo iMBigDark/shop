@@ -2,8 +2,10 @@
 include 'config.php';
 requireLogin();
 
-$stmt = $pdo->prepare("SELECT o.*, COUNT(oi.id) as items FROM orders o LEFT JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = ? GROUP BY o.id ORDER BY o.created_at DESC");
-$stmt->execute([$_SESSION['user_id']]);
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT o.id, o.user_id, o.total_price, o.status, o.created_at, COUNT(oi.id) as item_count FROM orders o LEFT JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = ? GROUP BY o.id ORDER BY o.created_at DESC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(array($user_id));
 $orders = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -47,9 +49,17 @@ $orders = $stmt->fetchAll();
                         <?php foreach ($orders as $order): ?>
                             <tr>
                                 <td>#<?php echo $order['id']; ?></td>
-                                <td><?php echo $order['items'] ?? 0; ?></td>
+                                <td><?php echo $order['item_count']; ?></td>
                                 <td><?php echo number_format($order['total_price'], 0); ?> ریال</td>
-                                <td><span class="status status-<?php echo $order['status']; ?>"><?php echo $order['status'] === 'completed' ? 'تکمیل شد' : ($order['status'] === 'pending' ? 'در حال بررسی' : 'لغو شد'); ?></span></td>
+                                <td><span class="status status-<?php echo $order['status']; ?>"><?php 
+                                    if ($order['status'] == 'completed') {
+                                        echo 'تکمیل شد';
+                                    } else if ($order['status'] == 'pending') {
+                                        echo 'در حال بررسی';
+                                    } else {
+                                        echo 'لغو شد';
+                                    }
+                                ?></span></td>
                                 <td><?php echo date('Y-m-d', strtotime($order['created_at'])); ?></td>
                             </tr>
                         <?php endforeach; ?>

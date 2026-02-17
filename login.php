@@ -3,35 +3,35 @@ include 'config.php';
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    if (empty($username) || empty($password)) {
+    if ($username == '' || $password == '') {
         $error = 'Please fill in all fields';
     } else {
-        try {
-            $stmt = $pdo->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
-            $stmt->execute([$username]);
-            $user = $stmt->fetch();
+        $stmt = $pdo->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+        $stmt->execute(array($username));
+        $user = $stmt->fetch();
 
-            if ($user && password_verify($password, $user['password'])) {
-                session_regenerate_id(true);
+        if ($user) {
+            $password_match = password_verify($password, $user['password']);
+            if ($password_match) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
 
-                if ($user['role'] === 'admin') {
+                if ($user['role'] == 'admin') {
                     header("Location: admin.php");
                 } else {
                     header("Location: customer.php");
                 }
-                exit;
+                exit();
             } else {
                 $error = 'Invalid username or password';
             }
-        } catch (Exception $e) {
-            $error = 'Login error: ' . $e->getMessage();
+        } else {
+            $error = 'Invalid username or password';
         }
     }
 }
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ورود - فروشگاه ساده</title>
+    <title>ورود - فروشگاه سجاد</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body dir="rtl">
@@ -57,9 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn">ورود</button>
             </form>
             <p>حساب ندارید؟ <a href="register.php">ثبت نام کنید</a></p>
-            <p style="margin-top: 20px; text-align: center; font-size: 0.9em;">
-                نمونه: نام کاربری: <strong>admin</strong>, رمز عبور: <strong>admin</strong>
-            </p>
         </div>
     </div>
 </body>

@@ -7,9 +7,8 @@ if (isLoggedIn()) {
     } else {
         header("Location: customer.php");
     }
-    exit;
+    exit();
 } else {
     header("Location: login.php");
-    exit;
+    exit();
 }
-?>
