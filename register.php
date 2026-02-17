@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Passwords do not match';
     } else {
         try {
-            $hashedPassword = hashPassword($password);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $hashedPassword]);
             $success = 'Registration successful! <a href="login.php">Login here</a>';
@@ -35,17 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Simple Shop</title>
+    <title>ثبت نام - فروشگاه ساده</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body dir="rtl">
     <div class="auth-container">
         <div class="auth-box">
-            <h1>Register</h1>
+            <h1>ثبت نام</h1>
             <?php if ($error): ?>
                 <div class="error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
@@ -53,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="success"><?php echo $success; ?></div>
             <?php endif; ?>
             <form method="POST" class="form">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <button type="submit" class="btn">Register</button>
+                <input type="text" name="username" placeholder="نام کاربری" required>
+                <input type="email" name="email" placeholder="ایمیل" required>
+                <input type="password" name="password" placeholder="رمز عبور" required>
+                <input type="password" name="confirm_password" placeholder="تایید رمز عبور" required>
+                <button type="submit" class="btn">ثبت نام</button>
             </form>
-            <p>Already have an account? <a href="login.php">Login here</a></p>
+            <p>حساب دارید؟ <a href="login.php">وارد شوید</a></p>
         </div>
     </div>
 </body>

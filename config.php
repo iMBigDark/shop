@@ -13,17 +13,14 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// Check if user is logged in
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
-// Check if user is admin
 function isAdmin() {
     return isLoggedIn() && $_SESSION['role'] === 'admin';
 }
 
-// Redirect to login if not authenticated
 function requireLogin() {
     if (!isLoggedIn()) {
         header("Location: login.php");
@@ -31,7 +28,6 @@ function requireLogin() {
     }
 }
 
-// Redirect to login if not admin
 function requireAdmin() {
     if (!isAdmin()) {
         header("Location: login.php");
@@ -39,12 +35,10 @@ function requireAdmin() {
     }
 }
 
-// Hash password
 function hashPassword($password) {
     return password_hash($password, PASSWORD_DEFAULT);
 }
 
-// Verify password
 function verifyPassword($password, $hash) {
     return password_verify($password, $hash);
 }

@@ -11,37 +11,37 @@ if ($orderId) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Success - Simple Shop</title>
+    <title>سفارش ثبت شد - فروشگاه ساده</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body dir="rtl">
     <nav class="navbar">
         <div class="navbar-container">
-            <h1 class="navbar-title">Simple Shop</h1>
+            <h1 class="navbar-title">فروشگاه ساده</h1>
             <div class="navbar-right">
-                <a href="customer.php" class="nav-link">Continue Shopping</a>
-                <a href="logout.php" class="nav-link">Logout</a>
+                <a href="customer.php" class="nav-link">ادامه خرید</a>
+                <a href="logout.php" class="nav-link">خروج</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
         <div class="success-box">
-            <h1>✓ Order Placed Successfully!</h1>
+            <h1>✓ سفارش با موفقیت ثبت شد!</h1>
             <?php if ($order): ?>
-                <p>Order ID: <strong>#<?php echo $order['id']; ?></strong></p>
-                <p>Total Amount: <strong>$<?php echo number_format($order['total_price'], 2); ?></strong></p>
-                <p>Status: <strong><?php echo ucfirst($order['status']); ?></strong></p>
-                <p>Order Date: <strong><?php echo date('M d, Y', strtotime($order['created_at'])); ?></strong></p>
+                <p>شماره سفارش: <strong>#<?php echo $order['id']; ?></strong></p>
+                <p>مبلغ کل: <strong><?php echo number_format($order['total_price'], 0); ?> ریال</strong></p>
+                <p>وضعیت: <strong><?php echo $order['status'] === 'completed' ? 'تکمیل شد' : 'در انتظار'; ?></strong></p>
+                <p>تاریخ سفارش: <strong><?php echo date('Y-m-d', strtotime($order['created_at'])); ?></strong></p>
             <?php endif; ?>
-            <p>Thank you for your purchase!</p>
+            <p>از خرید شما سپاسگزاریم!</p>
             <div style="margin-top: 20px;">
-                <a href="customer.php" class="btn btn-primary">Continue Shopping</a>
-                <a href="my-orders.php" class="btn">View My Orders</a>
+                <a href="customer.php" class="btn btn-primary">ادامه خرید</a>
+                <a href="my-orders.php" class="btn">نمایش سفارشات من</a>
             </div>
         </div>
     </div>

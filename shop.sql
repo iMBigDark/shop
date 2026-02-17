@@ -43,9 +43,9 @@ CREATE TABLE order_items (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
--- Insert sample admin user
+-- Insert sample admin user (password: admin)
 INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@shop.com', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWDeT5w1sHoPPujK', 'admin');
+('admin', 'admin@shop.com', '$2y$10$YIj7P2CP.cQFuWEJPkZda.3g6JV/wVJT9vv4iRe.TKqNQXlbV3L6O', 'admin');
 
 -- Insert sample products
 INSERT INTO products (name, price, description, stock) VALUES

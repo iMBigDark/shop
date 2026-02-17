@@ -1,4 +1,3 @@
-// Shopping cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function addToCart(id, name, price) {
@@ -17,7 +16,7 @@ function addToCart(id, name, price) {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartUI();
-    showNotification(`${name} added to cart!`);
+    showNotification(`${name} به سبد خرید اضافه شد!`);
 }
 
 function removeFromCart(id) {
@@ -51,20 +50,20 @@ function updateCartUI() {
     
     if (cartItems) {
         if (cart.length === 0) {
-            cartItems.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Your cart is empty</p>';
+            cartItems.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">سبد خرید خالی است</p>';
         } else {
             cartItems.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-details">
                         <div class="cart-item-name">${escapeHtml(item.name)}</div>
                         <div class="cart-item-quantity">
-                            Qty: <input type="number" min="1" value="${item.quantity}" 
+                            تعداد: <input type="number" min="1" value="${item.quantity}" 
                                        onchange="updateQuantity(${item.id}, this.value)" 
                                        style="width: 50px; padding: 4px;">
                         </div>
                     </div>
-                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
-                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+                    <div class="cart-item-price">${Math.round(item.price * item.quantity).toLocaleString('fa-IR')} ریال</div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">حذف</button>
                 </div>
             `).join('');
         }
@@ -72,17 +71,16 @@ function updateCartUI() {
     
     if (totalElement) {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        totalElement.textContent = total.toFixed(2);
+        totalElement.textContent = Math.round(total).toLocaleString('fa-IR');
     }
 }
 
 function checkout() {
     if (cart.length === 0) {
-        alert('Your cart is empty');
+        alert('سبد خرید خالی است');
         return;
     }
     
-    // Create a form and submit it to checkout.php
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'checkout.php';
@@ -94,6 +92,9 @@ function checkout() {
     
     form.appendChild(cartInput);
     document.body.appendChild(form);
+    
+    clearCart();
+    
     form.submit();
 }
 
@@ -132,30 +133,26 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function switchTab(tabName) {
-    // Hide all tabs
+function switchTab(tabName, element) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
     
-    // Remove active class from all buttons
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     
-    // Show selected tab
     const selectedTab = document.getElementById(tabName + '-tab');
     if (selectedTab) {
         selectedTab.classList.add('active');
     }
     
-    // Add active class to clicked button
-    event.target.classList.add('active');
+    if (element) {
+        element.classList.add('active');
+    }
 }
 
-// Initialize cart UI on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateCartUI();
     
-    // Add CSS animations
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideIn {

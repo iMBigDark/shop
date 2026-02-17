@@ -5,40 +5,44 @@ requireLogin();
 $products = $pdo->query("SELECT * FROM products WHERE stock > 0")->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Shop - Customer</title>
+    <title>فروشگاه ساده</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body dir="rtl">
     <nav class="navbar">
         <div class="navbar-container">
-            <h1 class="navbar-title">Simple Shop</h1>
+            <h1 class="navbar-title">فروشگاه سجاد</h1>
             <div class="navbar-right">
-                <span class="welcome">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <button id="cart-btn" class="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</button>
-                <a href="my-orders.php" class="nav-link">My Orders</a>
-                <a href="logout.php" class="nav-link">Logout</a>
+                <span class="welcome">خوش آمدید، <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <button id="cart-btn" class="cart-btn">🛒 سبد خرید (<span id="cart-count">0</span>)</button>
+                <a href="my-orders.php" class="nav-link">سفارشات من</a>
+                <a href="logout.php" class="nav-link">خروج</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <h2>Available Products</h2>
+        <h2>محصولات موجود</h2>
         <div class="products-grid">
             <?php foreach ($products as $product): ?>
                 <div class="product-card">
                     <div class="product-image">
-                        <div class="image-placeholder"><?php echo strtoupper(substr($product['name'], 0, 1)); ?></div>
+                        <?php if ($product['image'] && file_exists('uploads/' . $product['image'])): ?>
+                            <img src="uploads/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <?php else: ?>
+                            <div class="image-placeholder"><?php echo strtoupper(substr($product['name'], 0, 1)); ?></div>
+                        <?php endif; ?>
                     </div>
                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                    <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                    <p class="product-price"><?php echo number_format($product['price'], 0); ?> ریال</p>
                     <p class="product-description"><?php echo htmlspecialchars($product['description']); ?></p>
-                    <p class="stock">Stock: <?php echo $product['stock']; ?></p>
+                    <p class="stock">موجودی: <?php echo $product['stock']; ?></p>
                     <button class="btn btn-primary" onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>', <?php echo $product['price']; ?>)">
-                        Add to Cart
+                        افزودن به سبد
                     </button>
                 </div>
             <?php endforeach; ?>
@@ -49,11 +53,11 @@ $products = $pdo->query("SELECT * FROM products WHERE stock > 0")->fetchAll();
     <div id="cart-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Shopping Cart</h2>
+            <h2>سبد خرید</h2>
             <div id="cart-items" class="cart-items"></div>
             <div class="cart-summary">
-                <h3>Total: $<span id="total">0.00</span></h3>
-                <button class="btn btn-success" onclick="checkout()">Checkout</button>
+                <h3>مجموع: <span id="total">0</span> ریال</h3>
+                <button class="btn btn-success" onclick="checkout()">تسویه حساب</button>
             </div>
         </div>
     </div>
